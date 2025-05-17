@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthcare HRMS Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Healthcare HRMS Demo</h1>
+  </header>
+  <div class="container">
+    <div id="loginForm">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+    </div>
+
+    <div id="roleSelector" class="hidden">
+      <h2>Select Role</h2>
+      <select id="roleSelect">
+        <option value="">-- Select Role --</option>
+        <option value="manager">AR Manager</option>
+        <option value="arUser">AR User</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="selectRole()">Continue</button>
+    </div>
+
+    <div id="dashboard" class="dashboard hidden">
+      <h2>Dashboard</h2>
+
+      <div id="managerPanel" class="panel hidden">
+        <h3>Assign AR Work Order</h3>
+        <input type="text" id="arTask" placeholder="Enter AR Work Order" />
+        <button onclick="assignWorkOrder()">Assign</button>
+      </div>
+
+      <div id="arUserPanel" class="panel hidden">
+        <h3>Update AR Comments</h3>
+        <input type="text" id="arComment" placeholder="Enter Comment" />
+        <button onclick="submitARComment()">Submit</button>
+      </div>
+
+      <div id="adminPanel" class="panel hidden">
+        <h3>Admin Panel</h3>
+        <input type="text" id="clientName" placeholder="Assign Client Name" />
+        <button onclick="assignClient()">Assign Client</button>
+
+        <h4>Assign Roles</h4>
+        <input type="text" id="assignUser" placeholder="Username" />
+        <select id="assignRole">
+          <option value="manager">AR Manager</option>
+          <option value="arUser">AR User</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button onclick="assignUserRole()">Assign Role</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simulated in-memory users
+    const users = {
+      'john': { password: '1234', role: null },
+      'sarah': { password: 'abcd', role: null },
+      'admin': { password: 'admin', role: 'admin' }
+    };
+
+    let currentUser = null;
+
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (users[username] && users[username].password === password) {
+        currentUser = username;
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('roleSelector').classList.remove('hidden');
+      } else {
+        alert('Invalid login. Try john/1234, sarah/abcd, or admin/admin');
+      }
+    }
+
+    function selectRole() {
+      const role = document.getElementById('roleSelect').value;
+      if (!role) return alert('Please select a role.');
+
+      users[currentUser].role = role;
+      document.getElementById('roleSelector').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+
+      if (role === 'manager') {
+        document.getElementById('managerPanel').classList.remove('hidden');
+      } else if (role === 'arUser') {
+        document.getElementById('arUserPanel').classList.remove('hidden');
+      } else if (role === 'admin') {
+        document.getElementById('adminPanel').classList.remove('hidden');
+      }
+    }
+
+    function assignWorkOrder() {
+      const task = document.getElementById('arTask').value;
+      alert(`Work order assigned: "${task}"`);
+    }
+
+    function submitARComment() {
+      const comment = document.getElementById('arComment').value;
+      alert(`AR Comment submitted: "${comment}"`);
+    }
+
+    function assignClient() {
+      const clientName = document.getElementById('clientName').value;
+      alert(`Client "${clientName}" assigned`);
+    }
+
+    function assignUserRole() {
+      const user = document.getElementById('assignUser').value;
+      const role = document.getElementById('assignRole').value;
+      if (users[user]) {
+        users[user].role = role;
+        alert(`Role "${role}" assigned to ${user}`);
+      } else {
+        alert('User not found in this demo.');
+      }
+    }
+  </script>
+</body>
+</html>
